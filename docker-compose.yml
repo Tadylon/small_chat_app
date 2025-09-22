@@ -1,0 +1,62 @@
+services:
+  # Database service
+  db:
+    image: mysql:8.0
+    container_name: chat_app_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: chat_app
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - db_data:/var/lib/mysql
+    networks:
+      - app_network
+
+  # Backend service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: chat_app_backend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: rootpassword
+      DB_NAME: chat_app
+      SESSION_SECRET: your-session-secret-here
+      NODE_ENV: production
+    depends_on:
+      - db
+    networks:
+      - app_network
+
+  # Frontend service
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: chat_app_frontend
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      NODE_ENV: production
+    depends_on:
+      - backend
+    networks:
+      - app_network
+
+# Define named volumes
+volumes:
+  db_data:
+
+# Define networks
+networks:
+  app_network:
+    driver: bridge
