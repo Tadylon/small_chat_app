@@ -55,14 +55,6 @@
       </div>
     </div>
 
-    <!-- 强制调试按钮 -->
-    <div style="position: fixed; top: 50%; left: 50%; z-index: 9999; background: red; color: white; padding: 20px; border-radius: 10px;">
-      <div>强制调试区域</div>
-      <button @click="sendMessage" style="padding: 10px; margin: 5px;">强制发送按钮</button>
-      <div>消息内容: {{ newMessage }}</div>
-      <div>用户ID: {{ currentUserId }}</div>
-      <div>是否批准: {{ isApprovedMember }}</div>
-    </div>
 
     <!-- 群成员弹窗 -->
     <div v-if="showMemberModal" class="modal">
@@ -353,6 +345,7 @@ export default {
   flex: 1;
   overflow-y: auto;
   padding: 25px;
+  padding-bottom: 130px;
   background: rgba(248, 249, 250, 0.7);
   min-height: 0;
 }
@@ -409,10 +402,12 @@ export default {
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
   flex-shrink: 0;
   min-height: 80px;
-  position: relative !important;
-  z-index: 1000 !important;
-  visibility: visible !important;
-  opacity: 1 !important;
+  z-index: 1000;
+  position: fixed;
+  top: auto;
+  bottom: 20px;
+  left: 0;
+  width: 100%;
 }
 
 .chat-input form {
