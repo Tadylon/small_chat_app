@@ -17,7 +17,7 @@ const routes = [
     meta: { requiresAuth: true },
     children: [
       {
-        path: '/groups',
+        path: '/group',
         name: 'Groups',
         component: GroupListPage
       },
@@ -47,11 +47,21 @@ const router = createRouter({
 });
 
 // Navigation guard
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
 
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-    next('/login');
+    // Try to authenticate the user
+    try {
+      const isAuthenticated = await authStore.checkAuthStatus();
+      if (isAuthenticated) {
+        next();
+      } else {
+        next('/login');
+      }
+    } catch (error) {
+      next('/login');
+    }
   } else if ((to.name === 'Login' || to.name === 'Register') && authStore.isAuthenticated) {
     next('/');
   } else {

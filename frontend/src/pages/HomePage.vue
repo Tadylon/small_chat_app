@@ -6,7 +6,7 @@
         <h1>Chat App</h1>
         <nav class="nav-links">
           <router-link to="/" class="nav-link">私聊</router-link>
-          <router-link to="/groups" class="nav-link">群聊</router-link>
+          <router-link to="/group" class="nav-link">群聊</router-link>
         </nav>
       </div>
       <div class="user-info">
@@ -28,61 +28,76 @@
 </template>
 
 <script>
-import { onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { onMounted, computed } from 'vue';
+import { useRouter, useRoute, RouterLink } from 'vue-router'; // 导入 useRoute 和 RouterLink
 import UserList from '../components/UserList.vue';
 import ChatWindow from '../components/ChatWindow.vue';
 import { useAuthStore } from '../stores/auth.js';
 import { useChatStore } from '../stores/chat.js';
 
 export default {
-  name: 'HomePage',
-  components: {
-    UserList,
-    ChatWindow
-  },
-  setup() {
-    const router = useRouter();
-    const authStore = useAuthStore();
-    const chatStore = useChatStore();
+  name: 'HomePage',
+  components: {
+   UserList,
+    ChatWindow,
+    RouterLink // 如果模板中使用了 RouterLink，则需要在这里注册
+  },
+  setup() {
+    const router = useRouter();
+    // 1. 获取路由实例
+    const route = useRoute(); // 引入 useRoute
+    const authStore = useAuthStore();
+    const chatStore = useChatStore();
 
-    // Check if user is authenticated
-    onMounted(async () => {
-      if (!authStore.isAuthenticated) {
-        try {
-          await authStore.fetchCurrentUser();
-        } catch (error) {
-          // If we can't fetch the current user, redirect to login
-          router.push('/login');
-        }
-      }
-    });
+    // 2. 计算属性：判断私聊按钮是否激活
+    const isChatActive = computed(() => route.path === '/');
 
-    const handleLogout = async () => {
-      try {
-        await authStore.logout();
-        // Clear chat store
-        chatStore.clearMessages();
-        // Redirect to login page
-        router.push('/login');
-      } catch (error) {
-        console.error('Logout failed:', error);
-      }
-    };
+    // 3. 计算属性：判断群聊按钮是否激活
+    const isGroupActive = computed(() => route.path.startsWith('/group'));
 
-    const onUserSelected = () => {
-      // User selection handled in ChatWindow component
-    };
+    // Check if user is authenticated
+    onMounted(async () => {
+      if (!authStore.isAuthenticated) {
+        try {
+          const isAuthenticated = await authStore.checkAuthStatus();
+         if (!isAuthenticated) {
+            // If we can't authenticate, redirect to login
+            router.push('/login');
+          }
+        } catch (error) {
+          // If we can't authenticate, redirect to login
+          router.push('/login');
+        }
+      }
+    });
 
-    return {
-      authStore,
-      handleLogout,
-      onUserSelected
-    };
-  }
+    const handleLogout = async () => {
+      try {
+        await authStore.logout();
+        // Clear chat store
+        chatStore.clearMessages();
+        // Redirect to login page
+        router.push('/login');
+      } catch (error) {
+        console.error('Logout failed:', error);
+      }
+    };
+
+    const onUserSelected = () => {
+      // User selection handled in ChatWindow component
+    };
+
+    return {
+      authStore,
+      handleLogout,
+      onUserSelected,
+      // 暴露计算属性给模板
+      isChatActive,
+      isGroupActive
+    };
+  }
 };
 </script>
-
 <style scoped>
 .home-page {
   height: 100vh;
@@ -130,11 +145,40 @@ export default {
   font-weight: 500;
 }
 
-.nav-link:hover,
-.nav-link.router-link-active {
-  background: rgba(255, 255, 255, 0.2);
+/* 默认背景样式 */
+.nav-link:first-child {
+  background: rgba(255, 255, 255, 0.1);
+}
+.nav-link:last-child {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* -------------------- Hover 效果 -------------------- */
+
+/* 私聊按钮 hover 效果 */
+.nav-link:first-child:hover {
+  background: linear-gradient(120deg, #5ef582, #20c997);
   color: white;
-  transform: translateY(-2px);
+}
+
+/* 群聊按钮 hover 效果 */
+.nav-link:last-child:hover {
+  background: linear-gradient(120deg, #61fc76, #08f21b);
+  color: white;
+}
+
+/* -------------------- 激活状态（由 Vue Router 自动添加 router-link-active 类） -------------------- */
+
+/* 私聊激活状态 */
+.nav-link:first-child.router-link-active {
+  background: linear-gradient(120deg, #e3ab62, #77f4ce);
+  color: white;
+}
+
+/* 群聊激活状态 */
+.nav-link:last-child.router-link-active {
+  background: linear-gradient(120deg, #fd7e14, #ffc107);
+  color: white;
 }
 
 .header h1 {
