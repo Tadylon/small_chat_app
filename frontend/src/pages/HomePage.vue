@@ -36,25 +36,22 @@ import { useAuthStore } from '../stores/auth.js';
 import { useChatStore } from '../stores/chat.js';
 
 export default {
-  name: 'HomePage',
+name: 'HomePage',
   components: {
-   UserList,
+UserList,
     ChatWindow,
-    RouterLink // 如果模板中使用了 RouterLink，则需要在这里注册
+RouterLink // 如果模板中使用了 RouterLink，则需要在这里注册
   },
   setup() {
-    const router = useRouter();
-    // 1. 获取路由实例
-    const route = useRoute(); // 引入 useRoute
+    const router = useRouter();    // 1. 获取路由实例
+const route = useRoute(); // 引入 useRoute
     const authStore = useAuthStore();
     const chatStore = useChatStore();
 
     // 2. 计算属性：判断私聊按钮是否激活
-    const isChatActive = computed(() => route.path === '/');
-
-    // 3. 计算属性：判断群聊按钮是否激活
-    const isGroupActive = computed(() => route.path.startsWith('/group'));
-
+const isChatActive = computed(() => route.path === '/');
+// 3. 计算属性：判断群聊按钮是否激活
+const isGroupActive = computed(() => route.path.startsWith('/group'));
     // Check if user is authenticated
     onMounted(async () => {
       if (!authStore.isAuthenticated) {
@@ -175,8 +172,9 @@ export default {
   color: white;
 }
 
-/* 群聊激活状态 */
-.nav-link:last-child.router-link-active {
+/* 群聊激活状态 - 包括 /group 和 /group/:id 路径 */
+.nav-link:last-child.router-link-active,
+.nav-link:last-child.router-link-exact-active {
   background: linear-gradient(120deg, #fd7e14, #ffc107);
   color: white;
 }
