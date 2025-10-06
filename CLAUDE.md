@@ -14,6 +14,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Start backend production**: `cd backend && npm start`
 - **Check database tables**: `docker exec chat_app_db mysql -u root -prootpassword chat_app -e "SHOW TABLES;"`
 
+## Testing
+
+No explicit testing commands were found in the `package.json` files for either the backend or frontend services. Manual testing or a separate testing setup would be required.
+
 ## Architecture Overview
 
 The application follows a three-service architecture managed by Docker Compose:
@@ -41,8 +45,36 @@ The application follows a three-service architecture managed by Docker Compose:
    - Persistent data stored in Docker volume `db_data`
 
 Services communicate via Docker network `app_network`:
+
 - Frontend connects to backend via `http://backend:3000`
 - Backend connects to database via `db` hostname
+
+## API Endpoints
+
+### Authentication
+
+- POST `/api/auth/register` - Register new user
+- POST `/api/auth/login` - Login user
+- POST `/api/auth/logout` - Logout user
+- GET `/api/auth/me` - Get current user info
+
+### Chat
+
+- GET `/api/chat/users` - Get list of users
+- POST `/api/chat/messages` - Send a message
+- GET `/api/chat/messages/:userId` - Get messages with a user
+
+### Group Chat
+
+- GET `/api/group` - Get all groups
+- GET `/api/group/user` - Get groups for current user
+- POST `/api/group` - Create a new group
+- POST `/api/group/:groupId/apply` - Apply to join a group
+- POST `/api/group/:groupId/approve` - Approve a group member
+- GET `/api/group/:groupId` - Get group details
+- GET `/api/group/:groupId/members` - Get group members
+- POST `/api/group/:groupId/messages` - Send group message
+- GET `/api/group/:groupId/messages` - Get group messages
 
 ## Development Workflow
 
@@ -65,28 +97,55 @@ Services communicate via Docker network `app_network`:
 - Docker networking: service names (`backend`, `db`) used as hostnames
 - Database initialization: SQL scripts mounted at `/docker-entrypoint-initdb.d/init.sql`
 
-`docker-compose.yml` - 容器编排文件
-- **核心功能**: 使用 Docker Compose 编排和管理整个项目的三个服务（`backend`、`frontend`、`db`）。通过这个文件，可以一键启动、停止和管理整个应用环境。
+## Project Structure
+
+### Backend (`backend/`)
+- `server.js` - Main application entry point
+- `api/routes/` - API route definitions (auth, chat, file, group)
+- `api/controllers/` - Business logic for each route
+- `config/db.js` - Database connection configuration
+- `uploads/` - Directory for file uploads
+
+### Frontend (`frontend/`)
+- `src/main.js` - Application entry point
+- `src/App.vue` - Root Vue component
+- `src/router/` - Vue Router configuration
+- `src/stores/` - Pinia store definitions
+- `src/services/` - API service definitions
+- `src/components/` - Reusable Vue components
+- `src/pages/` - Page-level Vue components
+
+### Database (`db/`)
+- `init.sql` - Database schema and initial data
+
+## Docker Configuration
+
+- `docker-compose.yml` - Container orchestration for all services
+- `backend/Dockerfile` - Backend service Docker configuration
+- `frontend/Dockerfile` - Frontend service Docker configuration
 
 ### 代码风格与注释
-- **代码风格**: 请遵循 JavaScript 和 **Vue** 的通用最佳实践。
+
+- **代码风格**: 请遵循 JavaScript的通用最佳实践，vue的代码风格按照vue3的标准来写代码。
 - **注释习惯**: **养成良好的注释习惯**，使用中文注释，在代码中适当添加注释，以便他人（包括未来的你）理解。
 - **复杂功能**: 对于任何**复杂的功能、算法或非常规的实现**，请务必添加详细的注释来解释其工作原理、设计思路和注意事项。这有助于代码的可读性和后续维护。
 
 ### 版本控制
+
 - **工具**: 使用 **Git** 进行版本控制。请确保所有代码提交都遵循一致的提交信息规范。
 - **Git 工作流**: 建议使用**功能分支工作流 (Feature Branch Workflow)**。
-    - **主分支**: `main` 或 `master` 分支始终保持稳定，用于部署。
-    - **开发分支**: `develop` 分支用于日常开发集成。
-    - **功能分支**: 新功能开发从 `develop` 拉取，完成后合并回 `develop`。
+  - **主分支**: `main` 或 `master` 分支始终保持稳定，用于部署。
+  - **开发分支**: `develop` 分支用于日常开发集成。
+  - **功能分支**: 新功能开发从 `develop` 拉取，完成后合并回 `develop`。
 - **提交信息**: 遵循**约定式提交 (Conventional Commits)** 规范。例如：`feat: add user authentication endpoint` 或 `fix: correct database connection bug`。
 - **忽略文件**: 以下文件和目录不应被版本控制，请确保它们被添加到 `.gitignore` 文件中：
-    - `node_modules/`: 所有的依赖库目录。
-    - `.env`: 环境变量配置文件，包含敏感信息。
-    - `dist/` 或 `build/`: 前端项目的构建输出目录。
-    - 任何本地生成的日志文件、缓存文件等。
+  - `node_modules/`: 所有的依赖库目录。
+  - `.env`: 环境变量配置文件，包含敏感信息。
+  - `dist/` 或 `build/`: 前端项目的构建输出目录。
+  - 任何本地生成的日志文件、缓存文件等。
 
-### 在完成任何任务后，我会立即重新检查整个工作流，以确保：
+### 在完成任何任务后，我会立即重新检查整个工作流，以确保
+
 **命名一致性**：检查所有变量、函数、类和文件的命名是否一致、清晰，并遵循项目规范。
 **即时纠正**：如果发现任何命名或代码不一致的问题，我会立即进行修正，而不是等到您再次指出。
 **引用同步**：确保所有对变量或函数的引用都与最新的命名保持同步，杜绝前后不一致的情况。
