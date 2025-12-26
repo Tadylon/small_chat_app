@@ -1,6 +1,6 @@
 <template>
   <div class="home-page">
-    <div class="header">
+    <header class="header">
       <div class="header-left">
         <img
           src="../assets/header.jpg"
@@ -8,18 +8,18 @@
           class="header-logo"
         />
         <h1>Chat App</h1>
-        <nav class="nav-links">
+        <nav class="header-nav-links">
           <router-link to="/" class="nav-link">私聊</router-link>
           <router-link to="/group" class="nav-link">群聊</router-link>
         </nav>
       </div>
-      <div class="user-info">
+      <div class="header-user-info">
         <span>Welcome, {{ authStore.user?.username || "User" }}!</span>
         <button @click="handleLogout">Logout</button>
       </div>
-    </div>
+    </header>
     <!-- 私聊界面 -->
-    <div v-if="$route.path === '/'" class="chat-container">
+    <div v-if="$route.path === '/'" class="private-chat-container">
       <UserList @user-selected="onUserSelected" />
       <ChatWindow />
     </div>
@@ -96,126 +96,165 @@ export default {
     };
   },
 };
-</script>
-<style scoped>
-.home-page {
-  height: 100vh;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
-}
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 30px;
-  border-bottom: 1px solid #e0e0e0;
-  background: linear-gradient(120deg, #007bff, #00bcd4);
-  color: white;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
+<style lang="scss" scoped>
+  /* Variables */
+  .home-page {
+    /* Colors */
+    --color-primary: #3b82f6;
+    --color-text-main: #1f2937;
+    --color-text-light: #6b7280;
+    --color-bg-header: #ffffff;
+    --color-bg-body: #f3f4f6;
+    --color-border: #e5e7eb;
+    --color-danger: #ef4444;
 
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 25px;
-}
+    /* Spacing (4px grid) */
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    
+    /* Dimensions */
+    --header-height: 64px;
+  }
 
-.header-logo {
-  height: 50px;
-  width: 50px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid white;
-}
+  /* Block */
+  .home-page {
+    /* Positioning & Layout */
+    display: flex;
+    flex-direction: column;
+    
+    /* Box Model */
+    height: 100vh;
+    width: 100%;
+    
+    /* Visual */
+    background-color: var(--color-bg-body);
+  }
 
-.nav-links {
-  display: flex;
-  gap: 20px;
-}
+  /* Element: Header */
+  .home-page__header {
+    /* Positioning */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+    /* Box Model */
+    height: var(--header-height);
+    padding: 0 var(--space-lg);
+    border-bottom: 1px solid var(--color-border);
+    
+    /* Visual */
+    background-color: var(--color-bg-header);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
 
-.nav-link {
-  text-decoration: none;
-  color: rgba(255, 255, 255, 0.9);
-  padding: 10px 20px;
-  border-radius: 30px;
-  transition: all 0.3s ease;
-  font-weight: 500;
-}
+  /* Element: Header Left Container */
+  .home-page__header-left {
+    /* Positioning */
+    display: flex;
+    align-items: center;
+    gap: var(--space-md); /* 使用 gap 代替 margin，更现代 */
+  }
 
-/* 默认背景样式 */
-.nav-link:first-child {
-  background: rgba(255, 255, 255, 0.1);
-}
-.nav-link:last-child {
-  background: rgba(255, 255, 255, 0.1);
-}
+  /* Element: Logo */
+  .home-page__logo {
+    /* Box Model */
+    width: 32px;
+    height: 32px;
+    
+    /* Visual */
+    border-radius: 50%;
+    object-fit: cover;
+  }
 
-/* -------------------- Hover 效果 -------------------- */
+  /* Element: Title */
+  .home-page__title {
+    /* Box Model */
+    margin: 0;
+    
+    /* Typography */
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text-main);
+  }
 
-/* 私聊按钮 hover 效果 */
-.nav-link:first-child:hover {
-  background: linear-gradient(120deg, #5ef582, #20c997);
-  color: white;
-}
+  /* Element: Nav Item (Router Link) */
+  .home-page__nav-item {
+    /* Box Model */
+    padding: var(--space-sm) var(--space-md);
+    margin-left: var(--space-sm);
+    
+    /* Typography */
+    text-decoration: none;
+    color: var(--color-text-light);
+    font-weight: 500;
+    
+    /* Visual */
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
 
-/* 群聊按钮 hover 效果 */
-.nav-link:last-child:hover {
-  background: linear-gradient(120deg, #61fc76, #08f21b);
-  color: white;
-}
+  /* State: Vue Router 自动激活类 (也可视为 Modifier) */
+  .home-page__nav-item.router-link-active {
+    color: var(--color-primary);
+    background-color: rgba(59, 130, 246, 0.1);
+  }
 
-/* 群聊激活状态 - 包括 /group 和 /group/:id 路径 */
-.nav-link:last-child.router-link-active,
-.nav-link:last-child.router-link-exact-active {
-  color: white;
-}
+  /* Element: User Actions */
+  .home-page__user-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+  }
 
-.header h1 {
-  margin: 0;
-  color: white;
-  font-weight: 600;
-}
+  .home-page__welcome-text {
+    font-size: 0.875rem;
+    color: var(--color-text-main);
+  }
 
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
+  /* Element: Button */
+  .home-page__btn {
+    /* Box Model */
+    padding: 6px 12px;
+    
+    /* Typography */
+    font-size: 0.875rem;
+    cursor: pointer;
+    
+    /* Visual */
+    border: 1px solid transparent;
+    border-radius: 4px;
+  }
 
-.user-info span {
-  font-weight: 500;
-}
+  /* Modifier: Secondary Button */
+  .home-page__btn--secondary {
+    color: var(--color-danger);
+    background-color: transparent;
+    border-color: var(--color-border);
+  }
 
-.user-info button {
-  padding: 10px 20px;
-  background: linear-gradient(120deg, #dc3545, #e83e8c);
-  color: white;
-  border: none;
-  border-radius: 30px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
-}
+  .home-page__btn--secondary:hover {
+    background-color: #fef2f2;
+  }
 
-.user-info button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
-}
+  /* Element: Main Content */
+  .home-page__main {
+    /* Layout */
+    flex: 1; /* 填满剩余高度 */
+    overflow: hidden; /* 防止页面整体滚动 */
+  }
 
-.chat-container {
-  flex: 1;
-  display: flex;
-  overflow: hidden;
-  width: 100%;
-}
+  .home-page__content {
+    /* Box Model */
+    height: 100%;
+    width: 100%;
+    padding: var(--space-lg);
+  }
 
-.group-chat-container {
-  flex: 1;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
-  width: 100%;
-}
+  /* Modifier: Specific layout for private chat */
+  .home-page__content--private {
+    display: flex;
+    gap: var(--space-lg);
+  }
 </style>

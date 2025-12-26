@@ -2,5 +2,8 @@
   "dependencies": {
     "cors": "^2.8.5",
     "multer": "^2.0.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
   }
 }

@@ -1,0 +1,18 @@
+/* src/assets/styles/mixins.scss */
+
+/* 这是一个 SCSS 变量，不是 CSS 变量，它在编译后会消失 */
+$mobile-break: 768px;
+
+/* 这是一个混合宏 */
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 媒体查询工具 */
+@mixin mobile {
+  @media (max-width: $mobile-break) {
+    @content;
+  }
+}

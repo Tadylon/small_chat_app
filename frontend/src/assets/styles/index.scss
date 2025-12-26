@@ -1,0 +1,10 @@
+/* src/assets/styles/index.scss */
+@import "./reset.css";
+@import "./variables.css";
+
+/* 你也可以在这里写一些全局通用的类 */
+.text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
