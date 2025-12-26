@@ -1,12 +1,20 @@
 <template>
   <div id="app">
-    <router-view />
+    <Sidebar />
+    <div class="main-content">
+      <router-view />
+    </div>
   </div>
 </template>
 
 <script>
+import Sidebar from "./components/Sidebar.vue";
+
 export default {
-  name: 'App'
+  name: "App",
+  components: {
+    Sidebar,
+  },
 };
 </script>
 
@@ -18,8 +26,8 @@ export default {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
   color: #333;
   line-height: 1.6;
@@ -28,8 +36,14 @@ body {
 #app {
   height: 100vh;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
+}
+
+.main-content {
+  margin-left: 60px; /* Adjust this value to match your sidebar width */
+  flex: 1;
+  width: 100%;
+  height: 100vh;
+  overflow-y: auto;
 }
 
 /* 响应式设计 */

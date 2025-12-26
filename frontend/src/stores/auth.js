@@ -76,14 +76,26 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    async fetchCurrentUser() {
-      if (!this.isAuthenticated) return;
+    // Check if user is still authenticated with the backend
+    async checkAuthStatus() {
+      try {
+        await this.fetchCurrentUser();
+        return true;
+      } catch (error) {
+        // If fetching current user fails, logout
+        this.logout();
+        return false;
+      }
+    },
 
+    async fetchCurrentUser() {
       try {
         const response = await api.getCurrentUser();
         this.user = response.data;
+        this.isAuthenticated = true;
         // Update localStorage with current user data
         localStorage.setItem('user', JSON.stringify(this.user));
+        localStorage.setItem('isAuthenticated', 'true');
       } catch (error) {
         // If fetching current user fails, logout
         this.logout();

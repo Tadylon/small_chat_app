@@ -314,6 +314,8 @@ export default {
   flex-direction: column;
   background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
   overflow: hidden;
+  margin-left: 60px; /* Adjust this value to match your sidebar width */
+  width: calc(100% - 60px);
 }
 
 .chat-header {
@@ -403,11 +405,6 @@ export default {
   flex-shrink: 0;
   min-height: 80px;
   z-index: 1000;
-  position: fixed;
-  top: auto;
-  bottom: 20px;
-  left: 0;
-  width: 100%;
 }
 
 .chat-input form {
@@ -497,7 +494,7 @@ export default {
 }
 
 .btn-warning {
-  background: linear-gradient(120deg, #ffc107, #fd7e14);
+  background: linear-gradient(120deg, #6c757d, #adb5bd);
   color: #212529;
 }
 

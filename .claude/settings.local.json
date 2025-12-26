@@ -11,7 +11,10 @@
       "Bash(npm run dev)",
       "Bash(docker logs:*)",
       "Bash(docker exec:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "mcp__chrome-devtools__navigate_page",
+      "mcp__chrome-devtools__take_snapshot",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []

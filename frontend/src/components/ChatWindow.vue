@@ -236,7 +236,7 @@ export default {
 }
 
 .message {
-  max-width: 75%;
+  max-width: 30%;
   padding: 12px 18px;
   margin-bottom: 15px;
   border-radius: 20px;
@@ -340,11 +340,11 @@ export default {
 }
 
 .message-input input {
-  flex: 1;
+  flex: 10;
   padding: 12px 20px;
   border: 1px solid #e0e0e0;
   border-radius: 30px;
-  margin-right: 10px;
+  margin-right: 20px;
   outline: none;
   transition: border-color 0.3s;
 }

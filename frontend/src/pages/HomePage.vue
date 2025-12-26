@@ -2,7 +2,11 @@
   <div class="home-page">
     <div class="header">
       <div class="header-left">
-        <img src="../assets/header.jpg" alt="Chat App Logo" class="header-logo" />
+        <img
+          src="../assets/header.jpg"
+          alt="Chat App Logo"
+          class="header-logo"
+        />
         <h1>Chat App</h1>
         <nav class="nav-links">
           <router-link to="/" class="nav-link">私聊</router-link>
@@ -10,7 +14,7 @@
         </nav>
       </div>
       <div class="user-info">
-        <span>Welcome, {{ authStore.user?.username || 'User' }}!</span>
+        <span>Welcome, {{ authStore.user?.username || "User" }}!</span>
         <button @click="handleLogout">Logout</button>
       </div>
     </div>
@@ -28,76 +32,75 @@
 </template>
 
 <script>
-import { onMounted, computed } from 'vue';
-import { useRouter, useRoute, RouterLink } from 'vue-router'; // 导入 useRoute 和 RouterLink
-import UserList from '../components/UserList.vue';
-import ChatWindow from '../components/ChatWindow.vue';
-import { useAuthStore } from '../stores/auth.js';
-import { useChatStore } from '../stores/chat.js';
+import { onMounted, computed } from "vue";
+import { useRouter, useRoute, RouterLink } from "vue-router"; // 导入 useRoute 和 RouterLink
+import UserList from "../components/UserList.vue";
+import ChatWindow from "../components/ChatWindow.vue";
+import { useAuthStore } from "../stores/auth.js";
+import { useChatStore } from "../stores/chat.js";
 
 export default {
-name: 'HomePage',
-  components: {
-UserList,
-    ChatWindow,
-RouterLink // 如果模板中使用了 RouterLink，则需要在这里注册
-  },
-  setup() {
-    const router = useRouter();    // 1. 获取路由实例
-const route = useRoute(); // 引入 useRoute
-    const authStore = useAuthStore();
-    const chatStore = useChatStore();
+  name: "HomePage",
+  components: {
+    UserList,
+    ChatWindow,
+    RouterLink, // 如果模板中使用了 RouterLink，则需要在这里注册
+  },
+  setup() {
+    const router = useRouter(); // 1. 获取路由实例
+    const route = useRoute(); // 引入 useRoute
+    const authStore = useAuthStore();
+    const chatStore = useChatStore();
 
-    // 2. 计算属性：判断私聊按钮是否激活
-const isChatActive = computed(() => route.path === '/');
-// 3. 计算属性：判断群聊按钮是否激活
-const isGroupActive = computed(() => route.path.startsWith('/group'));
-    // Check if user is authenticated
-    onMounted(async () => {
-      if (!authStore.isAuthenticated) {
-        try {
-          const isAuthenticated = await authStore.checkAuthStatus();
-         if (!isAuthenticated) {
-            // If we can't authenticate, redirect to login
-            router.push('/login');
-          }
-        } catch (error) {
-          // If we can't authenticate, redirect to login
-          router.push('/login');
-        }
-      }
-    });
+    // 2. 计算属性：判断私聊按钮是否激活
+    const isChatActive = computed(() => route.path === "/");
+    // 3. 计算属性：判断群聊按钮是否激活
+    const isGroupActive = computed(() => route.path.startsWith("/group"));
+    // Check if user is authenticated
+    onMounted(async () => {
+      if (!authStore.isAuthenticated) {
+        try {
+          const isAuthenticated = await authStore.checkAuthStatus();
+          if (!isAuthenticated) {
+            // If we can't authenticate, redirect to login
+            router.push("/login");
+          }
+        } catch (error) {
+          // If we can't authenticate, redirect to login
+          router.push("/login");
+        }
+      }
+    });
 
-    const handleLogout = async () => {
-      try {
-        await authStore.logout();
-        // Clear chat store
-        chatStore.clearMessages();
-        // Redirect to login page
-        router.push('/login');
-      } catch (error) {
-        console.error('Logout failed:', error);
-      }
-    };
+    const handleLogout = async () => {
+      try {
+        await authStore.logout(); // Clear chat store
+        chatStore.clearMessages(); // Redirect to login page
+        router.push("/login");
+      } catch (error) {
+        console.error("Logout failed:", error);
+      }
+    };
 
-    const onUserSelected = () => {
-      // User selection handled in ChatWindow component
-    };
+    const onUserSelected = () => {
+      // User selection handled in ChatWindow component
+    };
 
-    return {
-      authStore,
-      handleLogout,
-      onUserSelected,
+    return {
+      authStore,
+      handleLogout,
+      onUserSelected,
       // 暴露计算属性给模板
       isChatActive,
-      isGroupActive
-    };
-  }
+      isGroupActive,
+    };
+  },
 };
 </script>
 <style scoped>
 .home-page {
   height: 100vh;
+  width: 100%;
   display: flex;
   flex-direction: column;
   background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
@@ -164,18 +167,9 @@ const isGroupActive = computed(() => route.path.startsWith('/group'));
   color: white;
 }
 
-/* -------------------- 激活状态（由 Vue Router 自动添加 router-link-active 类） -------------------- */
-
-/* 私聊激活状态 */
-.nav-link:first-child.router-link-active {
-  background: linear-gradient(120deg, #e3ab62, #77f4ce);
-  color: white;
-}
-
 /* 群聊激活状态 - 包括 /group 和 /group/:id 路径 */
 .nav-link:last-child.router-link-active,
 .nav-link:last-child.router-link-exact-active {
-  background: linear-gradient(120deg, #fd7e14, #ffc107);
   color: white;
 }
 
@@ -216,10 +210,12 @@ const isGroupActive = computed(() => route.path.startsWith('/group'));
   flex: 1;
   display: flex;
   overflow: hidden;
+  width: 100%;
 }
 
 .group-chat-container {
   flex: 1;
   background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+  width: 100%;
 }
 </style>
