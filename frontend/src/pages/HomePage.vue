@@ -96,165 +96,166 @@ export default {
     };
   },
 };
+</script>
 
 <style lang="scss" scoped>
-  /* Variables */
-  .home-page {
-    /* Colors */
-    --color-primary: #3b82f6;
-    --color-text-main: #1f2937;
-    --color-text-light: #6b7280;
-    --color-bg-header: #ffffff;
-    --color-bg-body: #f3f4f6;
-    --color-border: #e5e7eb;
-    --color-danger: #ef4444;
+/* Variables */
+.home-page {
+  /* Colors */
+  --color-primary: #3b82f6;
+  --color-text-main: #1f2937;
+  --color-text-light: #6b7280;
+  --color-bg-header: #ffffff;
+  --color-bg-body: #f3f4f6;
+  --color-border: #e5e7eb;
+  --color-danger: #ef4444;
 
-    /* Spacing (4px grid) */
-    --space-sm: 8px;
-    --space-md: 16px;
-    --space-lg: 24px;
-    
-    /* Dimensions */
-    --header-height: 64px;
-  }
+  /* Spacing (4px grid) */
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
 
-  /* Block */
-  .home-page {
-    /* Positioning & Layout */
-    display: flex;
-    flex-direction: column;
-    
-    /* Box Model */
-    height: 100vh;
-    width: 100%;
-    
-    /* Visual */
-    background-color: var(--color-bg-body);
-  }
+  /* Dimensions */
+  --header-height: 64px;
+}
 
-  /* Element: Header */
-  .home-page__header {
-    /* Positioning */
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    
-    /* Box Model */
-    height: var(--header-height);
-    padding: 0 var(--space-lg);
-    border-bottom: 1px solid var(--color-border);
-    
-    /* Visual */
-    background-color: var(--color-bg-header);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  }
+/* Block */
+.home-page {
+  /* Positioning & Layout */
+  display: flex;
+  flex-direction: column;
 
-  /* Element: Header Left Container */
-  .home-page__header-left {
-    /* Positioning */
-    display: flex;
-    align-items: center;
-    gap: var(--space-md); /* 使用 gap 代替 margin，更现代 */
-  }
+  /* Box Model */
+  height: 100vh;
+  width: 100%;
 
-  /* Element: Logo */
-  .home-page__logo {
-    /* Box Model */
-    width: 32px;
-    height: 32px;
-    
-    /* Visual */
-    border-radius: 50%;
-    object-fit: cover;
-  }
+  /* Visual */
+  background-color: var(--color-bg-body);
+}
 
-  /* Element: Title */
-  .home-page__title {
-    /* Box Model */
-    margin: 0;
-    
-    /* Typography */
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--color-text-main);
-  }
+/* Element: Header */
+.home-page__header {
+  /* Positioning */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
-  /* Element: Nav Item (Router Link) */
-  .home-page__nav-item {
-    /* Box Model */
-    padding: var(--space-sm) var(--space-md);
-    margin-left: var(--space-sm);
-    
-    /* Typography */
-    text-decoration: none;
-    color: var(--color-text-light);
-    font-weight: 500;
-    
-    /* Visual */
-    border-radius: 4px;
-    transition: all 0.2s;
-  }
+  /* Box Model */
+  height: var(--header-height);
+  padding: 0 var(--space-lg);
+  border-bottom: 1px solid var(--color-border);
 
-  /* State: Vue Router 自动激活类 (也可视为 Modifier) */
-  .home-page__nav-item.router-link-active {
-    color: var(--color-primary);
-    background-color: rgba(59, 130, 246, 0.1);
-  }
+  /* Visual */
+  background-color: var(--color-bg-header);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
 
-  /* Element: User Actions */
-  .home-page__user-actions {
-    display: flex;
-    align-items: center;
-    gap: var(--space-md);
-  }
+/* Element: Header Left Container */
+.home-page__header-left {
+  /* Positioning */
+  display: flex;
+  align-items: center;
+  gap: var(--space-md); /* 使用 gap 代替 margin，更现代 */
+}
 
-  .home-page__welcome-text {
-    font-size: 0.875rem;
-    color: var(--color-text-main);
-  }
+/* Element: Logo */
+.home-page__logo {
+  /* Box Model */
+  width: 32px;
+  height: 32px;
 
-  /* Element: Button */
-  .home-page__btn {
-    /* Box Model */
-    padding: 6px 12px;
-    
-    /* Typography */
-    font-size: 0.875rem;
-    cursor: pointer;
-    
-    /* Visual */
-    border: 1px solid transparent;
-    border-radius: 4px;
-  }
+  /* Visual */
+  border-radius: 50%;
+  object-fit: cover;
+}
 
-  /* Modifier: Secondary Button */
-  .home-page__btn--secondary {
-    color: var(--color-danger);
-    background-color: transparent;
-    border-color: var(--color-border);
-  }
+/* Element: Title */
+.home-page__title {
+  /* Box Model */
+  margin: 0;
 
-  .home-page__btn--secondary:hover {
-    background-color: #fef2f2;
-  }
+  /* Typography */
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text-main);
+}
 
-  /* Element: Main Content */
-  .home-page__main {
-    /* Layout */
-    flex: 1; /* 填满剩余高度 */
-    overflow: hidden; /* 防止页面整体滚动 */
-  }
+/* Element: Nav Item (Router Link) */
+.home-page__nav-item {
+  /* Box Model */
+  padding: var(--space-sm) var(--space-md);
+  margin-left: var(--space-sm);
 
-  .home-page__content {
-    /* Box Model */
-    height: 100%;
-    width: 100%;
-    padding: var(--space-lg);
-  }
+  /* Typography */
+  text-decoration: none;
+  color: var(--color-text-light);
+  font-weight: 500;
 
-  /* Modifier: Specific layout for private chat */
-  .home-page__content--private {
-    display: flex;
-    gap: var(--space-lg);
-  }
+  /* Visual */
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+/* State: Vue Router 自动激活类 (也可视为 Modifier) */
+.home-page__nav-item.router-link-active {
+  color: var(--color-primary);
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+/* Element: User Actions */
+.home-page__user-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.home-page__welcome-text {
+  font-size: 0.875rem;
+  color: var(--color-text-main);
+}
+
+/* Element: Button */
+.home-page__btn {
+  /* Box Model */
+  padding: 6px 12px;
+
+  /* Typography */
+  font-size: 0.875rem;
+  cursor: pointer;
+
+  /* Visual */
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+/* Modifier: Secondary Button */
+.home-page__btn--secondary {
+  color: var(--color-danger);
+  background-color: transparent;
+  border-color: var(--color-border);
+}
+
+.home-page__btn--secondary:hover {
+  background-color: #fef2f2;
+}
+
+/* Element: Main Content */
+.home-page__main {
+  /* Layout */
+  flex: 1; /* 填满剩余高度 */
+  overflow: hidden; /* 防止页面整体滚动 */
+}
+
+.home-page__content {
+  /* Box Model */
+  height: 100%;
+  width: 100%;
+  padding: var(--space-lg);
+}
+
+/* Modifier: Specific layout for private chat */
+.home-page__content--private {
+  display: flex;
+  gap: var(--space-lg);
+}
 </style>
