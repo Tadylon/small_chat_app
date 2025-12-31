@@ -1,7 +1,6 @@
 import { fileURLToPath, URL } from "node:url";
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
-import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -13,19 +12,15 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      // ✅ 修复：使用标准的 ESM 方式定义别名，替代 path.resolve + __dirname
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
   },
   build: {
     outDir: "dist",
   },
   css: {
-    preprocessorOptions: {
-      scss: {
-        // additionalData 的作用是：
-        // 在每个 .vue 文件的 <style lang="scss"> 顶部，自动加上这一行代码
-        additionalData: `@import "@/assets/styles/mixins.scss";`,
-      },
-    },
+    // 这里不需要手动配置 postcss，Vite 会自动读取根目录的 postcss.config.js
+    preprocessorOptions: {},
   },
 });

@@ -1,72 +1,85 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import { useAuthStore } from '../stores/auth.js';
+import { createRouter, createWebHistory } from "vue-router";
+import { useAuthStore } from "../stores/auth";
 
-// Page components
-import LoginPage from '../pages/LoginPage.vue';
-import RegisterPage from '../pages/RegisterPage.vue';
-import HomePage from '../pages/HomePage.vue';
-import GroupListPage from '../pages/GroupListPage.vue';
-import GroupChatPage from '../pages/GroupChatPage.vue';
+// Layouts
+import MainLayout from "../layouts/MainLayout.vue";
+import AuthLayout from "../layouts/AuthLayout.vue";
 
-// Define routes
+// Views
+import PrivateChat from "../views/PrivateChat.vue";
+import GroupList from "../views/group/GroupList.vue";
+import GroupChat from "../views/group/GroupChat.vue";
+import Login from "../views/auth/Login.vue";
+import Register from "../views/auth/Register.vue";
+
 const routes = [
   {
-    path: '/',
-    name: 'Home',
-    component: HomePage,
+    path: "/",
+    component: MainLayout,
     meta: { requiresAuth: true },
     children: [
       {
-        path: '/group',
-        name: 'Groups',
-        component: GroupListPage
+        path: "",
+        name: "PrivateChat",
+        component: PrivateChat,
       },
       {
-        path: '/group/:id',
-        name: 'GroupChat',
-        component: GroupChatPage
-      }
-    ]
+        path: "groups",
+        name: "GroupList",
+        component: GroupList,
+      },
+      {
+        path: "groups/:id",
+        name: "GroupChat",
+        component: GroupChat,
+      },
+    ],
   },
   {
-    path: '/login',
-    name: 'Login',
-    component: LoginPage
+    path: "/auth",
+    component: AuthLayout,
+    children: [
+      {
+        path: "login",
+        name: "Login",
+        component: Login,
+      },
+      {
+        path: "register",
+        name: "Register",
+        component: Register,
+      },
+      {
+        path: "",
+        redirect: "/auth/login",
+      },
+    ],
   },
   {
-    path: '/register',
-    name: 'Register',
-    component: RegisterPage
-  }
+    path: "/login",
+    redirect: "/auth/login",
+  },
 ];
 
-// Create router instance
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
 });
 
-// Navigation guard
+// 路由守卫保持不变
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
 
-  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-    // Try to authenticate the user
-    try {
-      const isAuthenticated = await authStore.checkAuthStatus();
-      if (isAuthenticated) {
-        next();
-      } else {
-        next('/login');
-      }
-    } catch (error) {
-      next('/login');
-    }
-  } else if ((to.name === 'Login' || to.name === 'Register') && authStore.isAuthenticated) {
-    next('/');
-  } else {
-    next();
+  if (!authStore.isAuthenticated && to.meta.requiresAuth) {
+    const success = await authStore.checkAuthStatus();
+    if (!success) return next("/auth/login");
   }
+
+  if (authStore.isAuthenticated && to.path.startsWith("/auth")) {
+    return next("/");
+  }
+
+  next();
 });
 
 export default router;

@@ -1,21 +1,19 @@
 <template>
-  <div id="app">
-    <Sidebar />
-    <div class="main-content">
-      <router-view />
-    </div>
-  </div>
+  <router-view />
 </template>
 
-<script>
-import Sidebar from "./components/Sidebar.vue";
-
-export default {
-  name: "App",
-  components: {
-    Sidebar,
-  },
-};
+<script setup>
+// App.vue 不需要引入 Sidebar 或 NavBar
+// 这些组件现在由 router/index.js 中的 Layout 负责加载
 </script>
 
-<style></style>
+<style>
+/* 全局样式可以放在这里，或者放在 assets/main.css */
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+</style>

@@ -1,17 +1,17 @@
-import { defineStore } from 'pinia';
-import api from '../services/api.js';
+import { defineStore } from "pinia";
+import api from "@/services/api.js";
 
-export const useAuthStore = defineStore('auth', {
+export const useAuthStore = defineStore("auth", {
   state: () => ({
     user: null,
     isAuthenticated: false,
     loading: false,
-    error: null
+    error: null,
   }),
 
   getters: {
     currentUser: (state) => state.user,
-    isLoggedIn: (state) => state.isAuthenticated
+    isLoggedIn: (state) => state.isAuthenticated,
   },
 
   actions: {
@@ -24,7 +24,7 @@ export const useAuthStore = defineStore('auth', {
         this.loading = false;
         return response;
       } catch (error) {
-        this.error = error.message || 'Registration failed';
+        this.error = error.message || "Registration failed";
         this.loading = false;
         throw error;
       }
@@ -39,12 +39,12 @@ export const useAuthStore = defineStore('auth', {
         this.user = response.data;
         this.isAuthenticated = true;
         // Save auth state to localStorage
-        localStorage.setItem('user', JSON.stringify(this.user));
-        localStorage.setItem('isAuthenticated', 'true');
+        localStorage.setItem("user", JSON.stringify(this.user));
+        localStorage.setItem("isAuthenticated", "true");
         this.loading = false;
         return response;
       } catch (error) {
-        this.error = error.message || 'Login failed';
+        this.error = error.message || "Login failed";
         this.loading = false;
         throw error;
       }
@@ -57,20 +57,20 @@ export const useAuthStore = defineStore('auth', {
         this.isAuthenticated = false;
         this.error = null;
         // Clear auth state from localStorage
-        localStorage.removeItem('user');
-        localStorage.removeItem('isAuthenticated');
+        localStorage.removeItem("user");
+        localStorage.removeItem("isAuthenticated");
       } catch (error) {
-        this.error = error.message || 'Logout failed';
+        this.error = error.message || "Logout failed";
         throw error;
       }
     },
 
     // Initialize auth state from localStorage
     initAuthState() {
-      const storedUser = localStorage.getItem('user');
-      const storedAuth = localStorage.getItem('isAuthenticated');
+      const storedUser = localStorage.getItem("user");
+      const storedAuth = localStorage.getItem("isAuthenticated");
 
-      if (storedUser && storedAuth === 'true') {
+      if (storedUser && storedAuth === "true") {
         this.user = JSON.parse(storedUser);
         this.isAuthenticated = true;
       }
@@ -94,13 +94,13 @@ export const useAuthStore = defineStore('auth', {
         this.user = response.data;
         this.isAuthenticated = true;
         // Update localStorage with current user data
-        localStorage.setItem('user', JSON.stringify(this.user));
-        localStorage.setItem('isAuthenticated', 'true');
+        localStorage.setItem("user", JSON.stringify(this.user));
+        localStorage.setItem("isAuthenticated", "true");
       } catch (error) {
         // If fetching current user fails, logout
         this.logout();
         throw error;
       }
-    }
-  }
+    },
+  },
 });

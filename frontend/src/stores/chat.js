@@ -1,19 +1,19 @@
-import { defineStore } from 'pinia';
-import api from '../services/api.js';
+import { defineStore } from "pinia";
+import api from "@/services/api.js";
 
-export const useChatStore = defineStore('chat', {
+export const useChatStore = defineStore("chat", {
   state: () => ({
     users: [],
     messages: [],
     selectedUser: null,
     loading: false,
-    error: null
+    error: null,
   }),
 
   getters: {
     getMessages: (state) => state.messages,
     getUsers: (state) => state.users,
-    getSelectedUser: (state) => state.selectedUser
+    getSelectedUser: (state) => state.selectedUser,
   },
 
   actions: {
@@ -26,7 +26,7 @@ export const useChatStore = defineStore('chat', {
         this.users = response.data;
         this.loading = false;
       } catch (error) {
-        this.error = error.message || 'Failed to fetch users';
+        this.error = error.message || "Failed to fetch users";
         this.loading = false;
         throw error;
       }
@@ -39,7 +39,7 @@ export const useChatStore = defineStore('chat', {
         this.messages.push(response.data);
         return response;
       } catch (error) {
-        this.error = error.message || 'Failed to send message';
+        this.error = error.message || "Failed to send message";
         throw error;
       }
     },
@@ -51,10 +51,11 @@ export const useChatStore = defineStore('chat', {
       try {
         const response = await api.getMessages(userId);
         this.messages = response.data;
-        this.selectedUser = this.users.find(user => user.id == userId) || null;
+        this.selectedUser =
+          this.users.find((user) => user.id == userId) || null;
         this.loading = false;
       } catch (error) {
-        this.error = error.message || 'Failed to fetch messages';
+        this.error = error.message || "Failed to fetch messages";
         this.loading = false;
         throw error;
       }
@@ -80,10 +81,10 @@ export const useChatStore = defineStore('chat', {
         file_name: fileData.fileName,
         file_size: fileData.fileSize,
         file_id: fileData.fileId,
-        created_at: new Date().toISOString()
+        created_at: new Date().toISOString(),
       };
 
       this.messages.push(fileMessage);
-    }
-  }
+    },
+  },
 });
