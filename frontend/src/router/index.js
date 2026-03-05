@@ -70,16 +70,28 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
 
-  if (!authStore.isAuthenticated && to.meta.requiresAuth) {
-    const success = await authStore.checkAuthStatus();
-    if (!success) return next("/auth/login");
+  // 如果还没检查过登录状态，先检查一次
+  // (假设你在 store 里有个标记位，或者每次都检查)
+  if (!authStore.isAuthenticated) {
+    await authStore.checkAuthStatus(); // 这里现在不会报错崩溃了
   }
 
-  if (authStore.isAuthenticated && to.path.startsWith("/auth")) {
-    return next("/");
+  // 需要登录的页面
+  if (to.meta.requiresAuth) {
+    if (authStore.isAuthenticated) {
+      next(); // 已登录，放行
+    } else {
+      next("/auth/login"); // 未登录，去登录页
+    }
   }
-
-  next();
+  // 已经是登录/注册页，但用户其实已登录
+  else if (to.path.startsWith("/auth") && authStore.isAuthenticated) {
+    next("/"); // 踢回首页
+  }
+  // 其他情况（比如登录页且未登录）
+  else {
+    next();
+  }
 });
 
 export default router;

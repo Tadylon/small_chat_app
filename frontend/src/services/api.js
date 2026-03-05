@@ -1,131 +1,84 @@
-// API service for making HTTP requests to backend
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
+import axios from "axios";
 
-class ApiService {
-  constructor() {
-    this.baseUrl = API_BASE_URL;
-  }
+// 1. 创建 Axios 实例
+const apiClient = axios.create({
+  baseURL: "http://localhost:3000/api", // 确保这是你的后端地址
+  withCredentials: true, // 允许携带 Cookie/Session
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
 
-  // Helper method to make requests
-  async request(endpoint, options = {}) {
-    const url = `${this.baseUrl}${endpoint}`;
+// 2. 封装 API 服务对象
+const apiService = {
+  // === 核心方法 (解决 api.get is not a function 问题) ===
+  // 直接暴露 axios 的基础方法，供 store 灵活调用
+  get(url, config) {
+    return apiClient.get(url, config);
+  },
+  post(url, data, config) {
+    return apiClient.post(url, data, config);
+  },
+  put(url, data, config) {
+    return apiClient.put(url, data, config);
+  },
+  delete(url, config) {
+    return apiClient.delete(url, config);
+  },
 
-    // Set default headers
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-      },
-      ...options
-    };
+  // === Auth 方法 ===
+  register(userData) {
+    return apiClient.post("/auth/register", userData);
+  },
+  login(credentials) {
+    return apiClient.post("/auth/login", credentials);
+  },
+  logout() {
+    return apiClient.post("/auth/logout");
+  },
+  getCurrentUser() {
+    return apiClient.get("/auth/me");
+  },
 
-    // Include credentials for session-based auth
-    config.credentials = 'include';
+  // === Chat 方法 ===
+  getUsers() {
+    return apiClient.get("/chat/users");
+  },
+  sendMessage(messageData) {
+    return apiClient.post("/chat/messages", messageData);
+  },
+  getMessages(userId) {
+    return apiClient.get(`/chat/messages/${userId}`);
+  },
 
-    try {
-      const response = await fetch(url, config);
-      const data = await response.json();
+  // === Group 方法 ===
+  getGroups() {
+    return apiClient.get("/group");
+  },
+  getUserGroups() {
+    return apiClient.get("/group/user");
+  },
+  createGroup(groupData) {
+    return apiClient.post("/group", groupData);
+  },
+  applyToGroup(groupId) {
+    return apiClient.post(`/group/${groupId}/apply`);
+  },
+  approveMember(groupId, data) {
+    return apiClient.post(`/group/${groupId}/approve`, data);
+  },
+  getGroup(groupId) {
+    return apiClient.get(`/group/${groupId}`);
+  },
+  getGroupMembers(groupId) {
+    return apiClient.get(`/group/${groupId}/members`);
+  },
+  sendGroupMessage(groupId, messageData) {
+    return apiClient.post(`/group/${groupId}/messages`, messageData);
+  },
+  getGroupMessages(groupId) {
+    return apiClient.get(`/group/${groupId}/messages`);
+  },
+};
 
-      if (!response.ok) {
-        throw new Error(data.message || 'API request failed');
-      }
-
-      return data;
-    } catch (error) {
-      console.error('API request error:', error);
-      throw error;
-    }
-  }
-
-  // Auth methods
-  async register(userData) {
-    return this.request('/auth/register', {
-      method: 'POST',
-      body: JSON.stringify(userData)
-    });
-  }
-
-  async login(credentials) {
-    return this.request('/auth/login', {
-      method: 'POST',
-      body: JSON.stringify(credentials)
-    });
-  }
-
-  async logout() {
-    return this.request('/auth/logout', {
-      method: 'POST'
-    });
-  }
-
-  async getCurrentUser() {
-    return this.request('/auth/me');
-  }
-
-  // Chat methods
-  async getUsers() {
-    return this.request('/chat/users');
-  }
-
-  async sendMessage(messageData) {
-    return this.request('/chat/messages', {
-      method: 'POST',
-      body: JSON.stringify(messageData)
-    });
-  }
-
-  async getMessages(userId) {
-    return this.request(`/chat/messages/${userId}`);
-  }
-
-  // Group methods
-  async getGroups() {
-    return this.request('/group');
-  }
-
-  async getUserGroups() {
-    return this.request('/group/user');
-  }
-
-  async createGroup(groupData) {
-    return this.request('/group', {
-      method: 'POST',
-      body: JSON.stringify(groupData)
-    });
-  }
-
-  async applyToGroup(groupId) {
-    return this.request(`/group/${groupId}/apply`, {
-      method: 'POST'
-    });
-  }
-
-  async approveMember(groupId, data) {
-    return this.request(`/group/${groupId}/approve`, {
-      method: 'POST',
-      body: JSON.stringify(data)
-    });
-  }
-
-  async getGroup(groupId) {
-    return this.request(`/group/${groupId}`);
-  }
-
-  async getGroupMembers(groupId) {
-    return this.request(`/group/${groupId}/members`);
-  }
-
-  async sendGroupMessage(groupId, messageData) {
-    return this.request(`/group/${groupId}/messages`, {
-      method: 'POST',
-      body: JSON.stringify(messageData)
-    });
-  }
-
-  async getGroupMessages(groupId) {
-    return this.request(`/group/${groupId}/messages`);
-  }
-}
-
-// Export singleton instance
-export default new ApiService();
+export default apiService;
